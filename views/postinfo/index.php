@@ -33,8 +33,19 @@ $this->params['breadcrumbs'][] = $this->title;
              'zip_name',
              'themepic',
              'theme_url:url',
-             'status',
-
+            [
+                'label'=>'status',
+                'attribute' => 'status',
+                'value' => function ($model) {
+                    $state = [
+                        '0' => '未处理',
+                        '1' => 'OK',
+                        '2' => '已删除',
+                    ];
+                    return $state[$model->status];
+                },
+                'headerOptions' => ['width' => '120']
+            ],
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>

@@ -15,8 +15,6 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'version')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'version_in')->textInput() ?>
-
     <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'zip_source')->textInput(['maxlength' => true]) ?>
@@ -27,7 +25,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'theme_url')->textInput(['maxlength' => true]) ?>
 
-<!--    --><?/*= $form->field($model, 'status')->textInput() */?>
+    <?= $form->field($model, 'status')->textInput(['maxlength' => true]) ?>
 
 
     <div class="form-group">

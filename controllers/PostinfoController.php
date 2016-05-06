@@ -76,7 +76,7 @@ class PostinfoController extends Controller
             unset($sql['version_in']);
             $sql['version_in'] = time();
 
-            var_dump($sql);
+           // var_dump($sql);
 
             Yii::$app->db->createCommand()->insert('postinfo',$model->attributes)->execute();
 
@@ -107,17 +107,16 @@ class PostinfoController extends Controller
             $model->zip_source_file = UploadedFile::getInstances($model, 'zip_source_file');
             $model->themepic_file = UploadedFile::getInstances($model, 'themepic_file');
             if ($model->upload()) {
-                // file is uploaded successfully
-                echo "upload controller ok";
-            }else{
-                echo "upload controller fail";
             }
 
-           echo "save to db";
-            $model->status = 1; // 1表示可用，2表示删除
-           var_dump($model->attributes);
-           var_dump($model->id);
-           Yii::$app->db->createCommand()->update('postinfo', $model->attributes, 'id ='.$model->id)->execute();
+            $sql = $model->attributes;
+
+            unset($sql['zip_source_file']);
+            unset($sql['themepic_file']);
+            unset($sql['version_in']);
+            $sql['version_in'] = time();
+
+           Yii::$app->db->createCommand()->update('postinfo',$sql, 'id ='.$model->id)->execute();
 
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
