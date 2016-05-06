@@ -1,0 +1,7 @@
+AuthType Basic
+AuthName "Restricted Files"
+# (Following line optional)
+AuthBasicProvider file
+AuthUserFile "C:\wamp2016_new\www\valid.txt"
+Require valid-user
+#Require user rbowen

@@ -9,34 +9,18 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
+use yii\filters\AccessControl;
+use app\models\LoginForm;
+use app\models\ContactForm;
 use yii\filters\auth\HttpBasicAuth;
 use app\models\User;
-use yii\filters\AccessControl;
+
 
 /**
  * PostinfoController implements the CRUD actions for Postinfo model.
  */
 class PostinfoController extends Controller
 {
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-/*                'basicAuth' => [
-                    'class' => HttpBasicAuth::className(),
-                    'auth' => [$this, 'auth']
-                ],*/
-            ],
-        ];
-    }
-
     /**
      * Lists all Postinfo models.
      * @return mixed
@@ -90,6 +74,7 @@ class PostinfoController extends Controller
             unset($sql['zip_source_file']);
             unset($sql['themepic_file']);
             unset($sql['version_in']);
+            $sql['version_in'] = time();
 
             var_dump($sql);
 
@@ -173,5 +158,4 @@ class PostinfoController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
-
 }

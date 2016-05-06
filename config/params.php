@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'adminEmail' => 'admin@example.com',
+    'adminEmail' => 'niejinping2014@gmail.com',
     'upload_path' => 'C:/wamp2016_new/www/yii2/upload/',
 
     'aws_s3_cfg' =>  [

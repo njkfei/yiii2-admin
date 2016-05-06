@@ -3,7 +3,8 @@
 $params = require(__DIR__ . '/params.php');
 
 $config = [
-    'id' => 'basic',
+    'id' => 'kk admin',
+    'name'=>'kk admin center',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'components' => [
@@ -15,7 +16,6 @@ $config = [
             ]
         ],
         'cache' => [
-            // 'class' => 'yii\caching\FileCache',
             'class' => 'yii\redis\Cache',
         ],
         'redis' => [
@@ -27,7 +27,7 @@ $config = [
         'user' => [
             'identityClass' => 'app\models\User',
             'enableAutoLogin' => true,
-            'enableSession' => false,
+            'enableSession' => true,
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
