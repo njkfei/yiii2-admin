@@ -41,6 +41,10 @@ $this->params['breadcrumbs'][] = $this->title;
             'pacname',
             'version',
             'title',
+            [
+                'label' => 'modify_time',
+                'value' => date("Y M y h:i:s",  $model->version_in),
+            ],
             'zip_source:url',
             'zip_name',
             'themepic',

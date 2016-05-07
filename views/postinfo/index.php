@@ -28,16 +28,21 @@ $this->params['breadcrumbs'][] = $this->title;
             'pacname',
             'version',
             'title',
-             'zip_source:url',
-             'zip_name',
-             'themepic',
-             'theme_url:url',
+            [
+                'label' => 'modify_time',
+                'value' => function($model){
+                    return   date("Y M y h:i:s",  $model->version_in);
+                }
+            ],
+            /*            'zip_source:url',*/
+            'zip_name',
+            /*            'themepic',
+                        'theme_url:url',*/
             [
                 'label'=>'pic_preview',
                 'format'=>'raw',
                 'value'=>function($model){
-                    return Html::img($model->theme_url,['width' => 200]
-                    );
+                    return Html::img($model->theme_url,['width' => 200]);
                 }
             ],
             [
@@ -53,7 +58,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'headerOptions' => ['width' => '120']
             ],
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'header'=> 'operations',
+                'class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
 </div>
