@@ -1,9 +1,8 @@
 <?php
 
 namespace app\models;
-use yii\web\IdentityInterface;
 
-class User extends \yii\base\Object implements IdentityInterface
+class Admin extends \yii\base\Object implements \yii\web\IdentityInterface
 {
     public $id;
     public $username;
@@ -28,17 +27,18 @@ class User extends \yii\base\Object implements IdentityInterface
         ],
     ];
 
-
-
     public static function find(){
         return json_encode(self::$users);
     }
     /**
      * @inheritdoc
      */
-    public static function findIdentity($id)
+    public static function findIdentity($id = null)
     {
-        return isset(self::$users[$id]) ? (new static(self::$users[$id])) : null;
+        if(is_null($id)){
+            $id = '101';
+        }
+        return isset(self::$users[$id]) ? json_encode(new static(self::$users[$id])) : null;
     }
 
     /**

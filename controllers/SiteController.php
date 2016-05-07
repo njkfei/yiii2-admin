@@ -195,19 +195,14 @@ echo $result;
 
     public function actionLogin()
     {
-        var_dump(Yii::$app->user->getReturnUrl());
-
         if (!\Yii::$app->user->isGuest) {
-
-            var_dump(Yii::$app->user->getReturnUrl());
-            return $this->redirect(Yii::$app->user->getReturnUrl());
+            return $this->goBack();
         }
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            // return $this->goBack();
-            var_dump(Yii::$app->user->getReturnUrl());
-            return $this->redirect(Yii::$app->user->getReturnUrl());
+            //return $this->redirect(Yii::$app->request->getUrl());
+            return $this->goBack();
         }
 
         return $this->render('login', [

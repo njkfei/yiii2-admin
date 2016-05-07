@@ -27,6 +27,11 @@ class PostinfoController extends Controller
      */
     public function actionIndex()
     {
+        if (Yii::$app->user->isGuest) {
+            // return $this->redirect('login');
+            return $this->actionLogin();
+        }
+
         $searchModel = new PostinfoSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -43,17 +48,6 @@ class PostinfoController extends Controller
      */
     public function actionView($id)
     {
-
-
-/*        $state = [
-            '0' => '未处理',
-            '1' => 'OK',
-            '2' => '已删除',
-        ];
-        var_dump( $state["0"]);*/
-
-
-
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -172,4 +166,33 @@ class PostinfoController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+
+    public function actionLogin()
+    {
+/*        var_dump( Yii::$app->request->getUrl());
+        var_dump(Yii::$app->user->getReturnUrl());*/
+
+          if (!\Yii::$app->user->isGuest) {
+              return $this->redirect(Yii::$app->request->getUrl());
+          }
+
+          $model = new LoginForm();
+          if ($model->load(Yii::$app->request->post()) && $model->login()) {
+              return $this->redirect(Yii::$app->request->getUrl());
+              //var_dump(Yii::$app->user->getReturnUrl());
+              //return $this->redirect(Yii::$app->request->getUrl());
+          }
+
+          return $this->render('login', [
+              'model' => $model,
+          ]);
+    }
+
+    public function actionLogout()
+    {
+        Yii::$app->user->logout();
+
+        return $this->goHome();
+    }
+
 }
