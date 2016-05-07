@@ -59,7 +59,7 @@ class PostinfoSearch extends Postinfo
         }
 
         // grid filtering conditions
-        $query->andFilterWhere([g
+        $query->andFilterWhere([
             'id' => $this->id,
             'version_in' => $this->version_in,
             'status' => $this->status,

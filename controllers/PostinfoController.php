@@ -60,6 +60,11 @@ class PostinfoController extends Controller
      */
     public function actionCreate()
     {
+        if (Yii::$app->user->isGuest) {
+            // return $this->redirect('login');
+            return $this->actionLogin();
+        }
+
         $model = new Postinfo();
 
         if (Yii::$app->request->isPost && $model->load(Yii::$app->request->post())) {
@@ -85,6 +90,8 @@ class PostinfoController extends Controller
 
             Yii::$app->db->createCommand()->insert('postinfo',$sql)->execute();
 
+            $this->refreshRedis();
+
             $searchModel = new PostinfoSearch();
             $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
             return $this->render('index', [
@@ -106,6 +113,11 @@ class PostinfoController extends Controller
      */
     public function actionUpdate($id)
     {
+        if (Yii::$app->user->isGuest) {
+            // return $this->redirect('login');
+            return $this->actionLogin();
+        }
+
         $model = $this->findModel($id);
 
         // var_dump($model);
@@ -127,6 +139,8 @@ class PostinfoController extends Controller
 
             Yii::$app->db->createCommand()->update('postinfo',$sql, 'id ='.$model->id)->execute();
 
+            $this->refreshRedis();
+
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
@@ -143,10 +157,17 @@ class PostinfoController extends Controller
      */
     public function actionDelete($id)
     {
+        if (Yii::$app->user->isGuest) {
+            // return $this->redirect('login');
+            return $this->actionLogin();
+        }
+
         $model = $this->findModel($id);
        // $this->findModel($id)->delete();
         $model->status = 2; // 2表示删除
         Yii::$app->db->createCommand()->update('postinfo', $model->attributes, 'id ='.$model->id)->execute();
+
+        $this->refreshRedis();
 
         return $this->redirect(['index']);
     }
@@ -198,5 +219,16 @@ class PostinfoController extends Controller
     }
 
 
+    public function refreshRedis(){
+
+        $ch = curl_init();
+        $timeout = 5;
+        curl_setopt ($ch, CURLOPT_URL, Yii::$app->params['refresh_redis_url']);
+        curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+        $file_contents = curl_exec($ch);
+        curl_close($ch);
+        echo $file_contents;
+    }
 
 }
