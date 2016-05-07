@@ -27,12 +27,19 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'pacname',
             'version',
-            'version_in',
             'title',
-             'zip_source',
+             'zip_source:url',
              'zip_name',
              'themepic',
              'theme_url:url',
+            [
+                'label'=>'pic_preview',
+                'format'=>'raw',
+                'value'=>function($model){
+                    return Html::img($model->theme_url,['width' => 200]
+                    );
+                }
+            ],
             [
                 'label'=>'status',
                 'attribute' => 'status',

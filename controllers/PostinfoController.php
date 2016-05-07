@@ -43,6 +43,17 @@ class PostinfoController extends Controller
      */
     public function actionView($id)
     {
+
+
+/*        $state = [
+            '0' => '未处理',
+            '1' => 'OK',
+            '2' => '已删除',
+        ];
+        var_dump( $state["0"]);*/
+
+
+
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -103,7 +114,9 @@ class PostinfoController extends Controller
     {
         $model = $this->findModel($id);
 
-        if (Yii::$app->request->isPost) {
+        // var_dump($model);
+
+        if (Yii::$app->request->isPost  && $model->load(Yii::$app->request->post())) {
             $model->zip_source_file = UploadedFile::getInstances($model, 'zip_source_file');
             $model->themepic_file = UploadedFile::getInstances($model, 'themepic_file');
             if ($model->upload()) {
@@ -116,7 +129,9 @@ class PostinfoController extends Controller
             unset($sql['version_in']);
             $sql['version_in'] = time();
 
-           Yii::$app->db->createCommand()->update('postinfo',$sql, 'id ='.$model->id)->execute();
+            var_dump($sql);
+
+            Yii::$app->db->createCommand()->update('postinfo',$sql, 'id ='.$model->id)->execute();
 
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
