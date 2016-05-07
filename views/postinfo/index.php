@@ -42,7 +42,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label'=>'pic_preview',
                 'format'=>'raw',
                 'value'=>function($model){
-                    return Html::img($model->theme_url,['width' => 200]);
+                    return Html::img($model->theme_url,['width' => 50]);
                 }
             ],
             [

@@ -28,8 +28,8 @@ class PostinfoController extends Controller
     public function actionIndex()
     {
         if (Yii::$app->user->isGuest) {
-            // return $this->redirect('login');
-            return $this->actionLogin();
+           // return $this->redirect('login');
+             return $this->actionLogin();
         }
 
         $searchModel = new PostinfoSearch();
@@ -83,7 +83,7 @@ class PostinfoController extends Controller
 
            // var_dump($sql);
 
-            Yii::$app->db->createCommand()->insert('postinfo',$model->attributes)->execute();
+            Yii::$app->db->createCommand()->insert('postinfo',$sql)->execute();
 
             $searchModel = new PostinfoSearch();
             $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
@@ -173,12 +173,14 @@ class PostinfoController extends Controller
         var_dump(Yii::$app->user->getReturnUrl());*/
 
           if (!\Yii::$app->user->isGuest) {
-              return $this->redirect(Yii::$app->request->getUrl());
+             // return $this->redirect(Yii::$app->request->getUrl());
+              return $this->goBack();
           }
 
           $model = new LoginForm();
           if ($model->load(Yii::$app->request->post()) && $model->login()) {
-              return $this->redirect(Yii::$app->request->getUrl());
+              return $this->goBack();
+              // return $this->redirect(Yii::$app->request->getUrl());
               //var_dump(Yii::$app->user->getReturnUrl());
               //return $this->redirect(Yii::$app->request->getUrl());
           }
@@ -194,5 +196,7 @@ class PostinfoController extends Controller
 
         return $this->goHome();
     }
+
+
 
 }

@@ -70,7 +70,8 @@ class PostinfoSearch extends Postinfo
             ->andFilterWhere(['like', 'zip_source', $this->zip_source])
             ->andFilterWhere(['like', 'zip_name', $this->zip_name])
             ->andFilterWhere(['like', 'themepic', $this->themepic])
-            ->andFilterWhere(['like', 'theme_url', $this->theme_url]);
+            ->andFilterWhere(['like', 'theme_url', $this->theme_url])
+            ->andFilterWhere(['like', 'status', 1]);
 
         return $dataProvider;
     }
