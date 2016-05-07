@@ -6,6 +6,15 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\Postinfo */
 
+function statusMap($model) {
+    $state = [
+        '0' => '未处理',
+        '1' => 'OK',
+        '2' => '已删除',
+    ];
+    return $state[$model->status];
+}
+
 $this->title = $model->title;
 $this->params['breadcrumbs'][] = ['label' => 'Postinfos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
@@ -37,8 +46,15 @@ $this->params['breadcrumbs'][] = $this->title;
             'themepic',
             'theme_url:url',
             [
+                'label'=>'pic_preview',
+                'format'=>'raw',
+                'value'=> Html::img($model->theme_url,['width' => 768]),
+            ],
+            [
                 'label'=>'status',
                 'attribute' => 'status',
+                'value' => statusMap($model),
+
             ],
         ],
     ]) ?>
