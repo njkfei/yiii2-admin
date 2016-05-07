@@ -46,6 +46,7 @@ class Postinfo extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['pacname','version','zip_name','title','zip_source_file','themepic_file'], 'required'],
             [['version_in'], 'safe'],
             [['status'], 'integer'],
             [['pacname', 'title', 'theme_url'], 'string', 'max' => 100],
