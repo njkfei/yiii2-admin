@@ -47,6 +47,7 @@ class PostinfoSearch extends Postinfo
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort'=> ['defaultOrder' => ['status'=>SORT_ASC]]
         ]);
 
         $this->load($params);
@@ -58,7 +59,7 @@ class PostinfoSearch extends Postinfo
         }
 
         // grid filtering conditions
-        $query->andFilterWhere([
+        $query->andFilterWhere([g
             'id' => $this->id,
             'version_in' => $this->version_in,
             'status' => $this->status,
@@ -70,8 +71,8 @@ class PostinfoSearch extends Postinfo
             ->andFilterWhere(['like', 'zip_source', $this->zip_source])
             ->andFilterWhere(['like', 'zip_name', $this->zip_name])
             ->andFilterWhere(['like', 'themepic', $this->themepic])
-            ->andFilterWhere(['like', 'theme_url', $this->theme_url])
-            ->andFilterWhere(['like', 'status', 1]);
+            ->andFilterWhere(['like', 'theme_url', $this->theme_url]);
+           // ->andFilterWhere(['like', 'status', 1]);
 
         return $dataProvider;
     }
