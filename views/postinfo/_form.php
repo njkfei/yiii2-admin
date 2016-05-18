@@ -11,17 +11,19 @@ use yii\widgets\ActiveForm;
 <div class="postinfo-form">
     <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]) ?>
 
-    <?= $form->field($model, 'pacname')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'pacname')->textInput(['maxlength' => true])->hint('default value is zip file name') ?>
 
-    <?= $form->field($model, 'version')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'version')->textInput(['maxlength' => true])->hint('must enter') ?>
 
-    <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'title')->textInput(['maxlength' => true])->hint('default value is zip file name') ?>
 
     <?= $form->field($model, 'zip_source_file')->fileInput() ?>
 
-    <?= $form->field($model, 'zip_name')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'zip_name')->textInput(['maxlength' => true])->hint('default value is zip file name') ?>
 
     <?= $form->field($model, 'themepic_file')->fileInput() ?>
+
+    <input type="hidden" name="_csrf" value="<?=Yii::$app->request->getCsrfToken()?>" />
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

@@ -46,7 +46,7 @@ class Postinfo extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['pacname','version','zip_name','title','zip_source_file','themepic_file'], 'required'],
+            [['version','zip_source_file','themepic_file'], 'required'],
             [['version_in'], 'safe'],
             [['status'], 'integer'],
             [['pacname', 'title', 'theme_url'], 'string', 'max' => 100],
@@ -82,8 +82,10 @@ class Postinfo extends \yii\db\ActiveRecord
     {
         // 保存安装包文件
         foreach ($this->zip_source_file as $file) {
-            echo $file->baseName;
-            echo $file->extension;
+/*            echo $file->baseName;
+            echo $file->extension;*/
+           // var_dump($rows);
+
             $file->saveAs($this->uploadPath() . $file->baseName . '.' . $file->extension);
 
             $this->zip_source = $this->uploadPath() . $file->baseName . '.' . $file->extension;
@@ -91,7 +93,21 @@ class Postinfo extends \yii\db\ActiveRecord
             // 上传到aws之上,返回在aws当中的url
             $this->zip_source =  $this->saveAws($this->zip_source,$file->extension);
 
+            if(empty($this->pacname) ){
+                $this->pacname = $file->baseName;
+            }
+
+            if(empty($this->zip_name)){
+                $this->zip_name = $file->baseName;
+            }
+
+            if(empty($this->title)){
+                $this->title = $file->baseName;
+            }
+
             $this->zip_source_file = null;
+
+            return true;
         }
 
         // 保存图片文件

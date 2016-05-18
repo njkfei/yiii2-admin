@@ -56,7 +56,9 @@ $config = [
     'params' => $params,
 ];
 
-// if (YII_ENV_DEV) {
+defined('YII_ENV') or define('YII_ENV', 'prod');   // prod是默认值，代表生产环境。dev代表开发环境
+
+ if (YII_ENV_DEV) {
     // configuration adjustments for 'dev' environment
     $config['bootstrap'][] = 'debug';
     $config['modules']['debug'] = [
@@ -67,6 +69,6 @@ $config = [
     $config['modules']['gii'] = [
         'class' => 'yii\gii\Module',
     ];
-//}
+}
 
 return $config;

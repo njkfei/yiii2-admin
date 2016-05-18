@@ -28,8 +28,8 @@ class PostinfoController extends Controller
     public function actionIndex()
     {
         if (Yii::$app->user->isGuest) {
-           // return $this->redirect('login');
-             return $this->actionLogin();
+            // return $this->redirect('login');
+            return $this->actionLogin();
         }
 
         $searchModel = new PostinfoSearch();
@@ -53,6 +53,16 @@ class PostinfoController extends Controller
         ]);
     }
 
+    public function exist($pacname){
+        $tmp= '\'';
+        $tmp = $tmp.$pacname;
+        $tmp =  $tmp. '\'';
+
+        $row = Yii::$app->db->createCommand('SELECT * FROM `postinfo` WHERE `pacname`= '.$tmp)
+            ->queryOne();
+        return $row;
+    }
+
     /**
      * Creates a new Postinfo model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -60,6 +70,7 @@ class PostinfoController extends Controller
      */
     public function actionCreate()
     {
+
         if (Yii::$app->user->isGuest) {
             // return $this->redirect('login');
             return $this->actionLogin();
@@ -71,22 +82,28 @@ class PostinfoController extends Controller
             $model->zip_source_file = UploadedFile::getInstances($model, 'zip_source_file');
             $model->themepic_file = UploadedFile::getInstances($model, 'themepic_file');
 
-            if ($model->upload()) {
-                // file is uploaded successfully
-                echo "upload controller ok";
-            }else{
-                echo "upload controller fail";
+            foreach ($model->zip_source_file as $file){
+                if($this->exist($file->baseName)){
+                    return $this->render('error');
+                }
             }
 
-           $model->status = 1; //表示可用
-           $sql = $model->attributes;
+
+
+            $model->upload();
+            $model->status = 1; //表示可用
+            $sql = $model->attributes;
 
             unset($sql['zip_source_file']);
             unset($sql['themepic_file']);
             unset($sql['version_in']);
             $sql['version_in'] = time();
 
-           // var_dump($sql);
+            // var_dump($sql);
+
+            if($this->exist($model->pacname)){
+                return $this->render('error');
+            }
 
             Yii::$app->db->createCommand()->insert('postinfo',$sql)->execute();
 
@@ -163,7 +180,7 @@ class PostinfoController extends Controller
         }
 
         $model = $this->findModel($id);
-       // $this->findModel($id)->delete();
+        // $this->findModel($id)->delete();
         $model->status = 2; // 2表示删除
         Yii::$app->db->createCommand()->update('postinfo', $model->attributes, 'id ='.$model->id)->execute();
 
@@ -190,25 +207,25 @@ class PostinfoController extends Controller
 
     public function actionLogin()
     {
-/*        var_dump( Yii::$app->request->getUrl());
-        var_dump(Yii::$app->user->getReturnUrl());*/
+        /*        var_dump( Yii::$app->request->getUrl());
+                var_dump(Yii::$app->user->getReturnUrl());*/
 
-          if (!\Yii::$app->user->isGuest) {
-             // return $this->redirect(Yii::$app->request->getUrl());
-              return $this->goBack();
-          }
+        if (!\Yii::$app->user->isGuest) {
+            // return $this->redirect(Yii::$app->request->getUrl());
+            return $this->goBack();
+        }
 
-          $model = new LoginForm();
-          if ($model->load(Yii::$app->request->post()) && $model->login()) {
-              return $this->goBack();
-              // return $this->redirect(Yii::$app->request->getUrl());
-              //var_dump(Yii::$app->user->getReturnUrl());
-              //return $this->redirect(Yii::$app->request->getUrl());
-          }
+        $model = new LoginForm();
+        if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            return $this->goBack();
+            // return $this->redirect(Yii::$app->request->getUrl());
+            //var_dump(Yii::$app->user->getReturnUrl());
+            //return $this->redirect(Yii::$app->request->getUrl());
+        }
 
-          return $this->render('login', [
-              'model' => $model,
-          ]);
+        return $this->render('login', [
+            'model' => $model,
+        ]);
     }
 
     public function actionLogout()
