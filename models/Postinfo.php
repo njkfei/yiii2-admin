@@ -74,7 +74,8 @@ class Postinfo extends \yii\db\ActiveRecord
             'theme_url' => 'Theme Url',
             'status' => 'Status',
             'themepic_file' => "themepic_file",
-            'zip_source_file' => 'zip_source_file'
+            'zip_source_file' => 'zip_source_file',
+            'order_id' => 'order',
         ];
     }
 

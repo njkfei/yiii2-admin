@@ -5,6 +5,8 @@ namespace app\controllers;
 use Yii;
 use app\models\Postinfo;
 use app\models\PostinfoSearch;
+use yii\base\Exception;
+use yii\db\mssql\PDO;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -248,4 +250,98 @@ class PostinfoController extends Controller
         echo $file_contents;
     }
 
+    public function actionOperator()
+    {
+        if (Yii::$app->user->isGuest) {
+            // return $this->redirect('login');
+            return $this->actionLogin();
+        }
+
+
+        if (Yii::$app->request->isPost ) {
+            $operator = Yii::$app->request->post("operator");
+
+
+            $operator_tmp = $this->processText($operator);
+
+            $operators = explode("\n",$operator_tmp);
+
+            $sql['order_id'] =  65535;
+            Yii::$app->db->createCommand()->update('postinfo',$sql)->execute();
+
+            foreach ($operators as $index => $item) {
+                $sql['order_id'] = $index + 1;
+                $item = $this->removeNewLine($item);
+                $db = new PDO("mysql:host=localhost;dbname=yii2basic", 'root', 'rootroot');
+                $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                $new_sql = "UPDATE `postinfo` SET `order_id`=".$index."  WHERE  `postinfo`.`pacname`= ".$this->str_wrap($item);
+                try {
+                    var_dump($db->exec($new_sql));
+                }
+                catch (PDOException $e)
+                {
+                    echo $e->getMessage();
+                    die();
+                }
+
+
+            }
+
+            // $this->actionRefresh();
+             return $this->goHome();
+            /* var_dump(Yii::$app->request->post("operator"));
+
+             return "hello,operator";*/
+        } else {
+            return $this->render('operator');
+        }
+    }
+
+    public function actionRefresh(){
+
+        /*        $ch = curl_init();
+                $timeout = 5;
+                curl_setopt ($ch, CURLOPT_URL, Yii::$app->params['refresh_redis_url']);
+                curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+                $file_contents = curl_exec($ch);
+                curl_close($ch);
+                return $file_contents;*/
+
+        Yii::$app->cache->flush();
+
+        $themes = Yii::$app->db->createCommand('SELECT `id`, `pacname` as `packageName` ,`version`,`title`,`zip_source` as `downloadUrl`,`theme_url` as `previewImageUrl`  FROM `postinfo` where `status`=1 ')->queryAll();
+        $themes_new = array();
+        if($themes != null){
+            foreach($themes as $theme){
+                $id = $theme['id'];
+                // unset($theme['id']);
+                Yii::$app->cache->set("theme".$id,json_encode($theme));
+
+                $themes_new[] = $theme;
+            }
+            // unset($themes['id']);
+            Yii::$app->cache->set("themes",json_encode($themes_new));
+        }
+
+        echo "reset redis data ok";
+    }
+
+    public function processText($text) {
+        $text = strip_tags($text);
+        $text = trim($text);
+        $text = htmlspecialchars($text);
+        return $text;
+    }
+
+
+    public function str_wrap($string = '', $char = '"')
+    {
+        return str_pad($string, strlen($string) + 2, $char, STR_PAD_BOTH);
+    }
+
+    public function removeNewLine($str)
+    {
+        return str_replace(array("\r", "\n", "\r\n", "\n\r"), '', $str);
+    }
 }

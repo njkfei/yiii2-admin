@@ -17,6 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
         <?= Html::a('Create Postinfo', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create Operator', ['operator'], ['class' => 'btn btn-primary']) ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -58,6 +59,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'headerOptions' => ['width' => '120']
             ],
+            'order_id',
             [
                 'header'=> 'operations',
                 'class' => 'yii\grid\ActionColumn'],

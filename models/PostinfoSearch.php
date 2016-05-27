@@ -47,7 +47,7 @@ class PostinfoSearch extends Postinfo
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'sort'=> ['defaultOrder' => ['status'=>SORT_ASC]]
+            'sort'=> ['defaultOrder' => ['order_id'=>SORT_ASC,'status'=>SORT_ASC]]
         ]);
 
         $this->load($params);
