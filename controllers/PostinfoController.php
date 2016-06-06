@@ -100,6 +100,7 @@ class PostinfoController extends Controller
             unset($sql['themepic_file']);
             unset($sql['version_in']);
             $sql['version_in'] = time();
+            $sql['order_id'] = 65535;
 
             // var_dump($sql);
 
@@ -158,7 +159,7 @@ class PostinfoController extends Controller
 
             Yii::$app->db->createCommand()->update('postinfo',$sql, 'id ='.$model->id)->execute();
 
-            $this->refreshRedis();
+            $this->actionRefresh();
 
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
@@ -186,7 +187,7 @@ class PostinfoController extends Controller
         $model->status = 2; // 2表示删除
         Yii::$app->db->createCommand()->update('postinfo', $model->attributes, 'id ='.$model->id)->execute();
 
-        $this->refreshRedis();
+        $this->actionRefresh();
 
         return $this->redirect(['index']);
     }
@@ -272,9 +273,15 @@ class PostinfoController extends Controller
             foreach ($operators as $index => $item) {
                 $sql['order_id'] = $index + 1;
                 $item = $this->removeNewLine($item);
-                $db = new PDO("mysql:host=localhost;dbname=yii2basic", 'root', 'rootroot');
-                $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
                 $new_sql = "UPDATE `postinfo` SET `order_id`=".$index."  WHERE  `postinfo`.`pacname`= ".$this->str_wrap($item);
+
+                Yii::$app->db->createCommand($new_sql)->execute();
+
+
+/*                $db = new PDO("mysql:host=localhost;dbname=yii2basic", 'root', 'rootroot');
+                $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
                 try {
                     var_dump($db->exec($new_sql));
                 }
@@ -282,12 +289,12 @@ class PostinfoController extends Controller
                 {
                     echo $e->getMessage();
                     die();
-                }
+                }*/
 
 
             }
 
-            // $this->actionRefresh();
+            $this->actionRefresh();
              return $this->goHome();
             /* var_dump(Yii::$app->request->post("operator"));
 
@@ -310,7 +317,7 @@ class PostinfoController extends Controller
 
         Yii::$app->cache->flush();
 
-        $themes = Yii::$app->db->createCommand('SELECT `id`, `pacname` as `packageName` ,`version`,`title`,`zip_source` as `downloadUrl`,`theme_url` as `previewImageUrl`  FROM `postinfo` where `status`=1 ')->queryAll();
+        $themes = Yii::$app->db->createCommand('SELECT `order_id` as `id`, `pacname` as `packageName` ,`version`,`title`,`zip_source` as `downloadUrl`,`theme_url` as `previewImageUrl`  FROM `postinfo` where `status`=1 AND `order_id`<>65535 ORDER BY `id` ASC' )->queryAll();
         $themes_new = array();
         if($themes != null){
             foreach($themes as $theme){
