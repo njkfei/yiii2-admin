@@ -102,7 +102,7 @@ class PostinfoController extends Controller
             $sql['version_in'] = time();
             $sql['order_id'] = 65535;
 
-            // var_dump($sql);
+             var_dump($sql);
 
             if($this->exist($model->pacname)){
                 return $this->render('error');
@@ -110,7 +110,7 @@ class PostinfoController extends Controller
 
             Yii::$app->db->createCommand()->insert('postinfo',$sql)->execute();
 
-            $this->refreshRedis();
+            $this->actionRefresh();
 
             $searchModel = new PostinfoSearch();
             $dataProvider = $searchModel->search(Yii::$app->request->queryParams);

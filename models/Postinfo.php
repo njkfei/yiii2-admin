@@ -46,7 +46,7 @@ class Postinfo extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['version','zip_source_file','themepic_file'], 'required'],
+            [['version'], 'required'],
             [['version_in'], 'safe'],
             [['status'], 'integer'],
             [['pacname', 'title', 'theme_url'], 'string', 'max' => 100],
@@ -108,7 +108,6 @@ class Postinfo extends \yii\db\ActiveRecord
 
             $this->zip_source_file = null;
 
-            return true;
         }
 
         // 保存图片文件
@@ -124,8 +123,6 @@ class Postinfo extends \yii\db\ActiveRecord
 
             $this->themepic_file = null;
         }
-
-        return true;
     }
 
     public  function saveAws($file,$extension)
