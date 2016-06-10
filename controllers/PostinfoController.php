@@ -239,7 +239,7 @@ class PostinfoController extends Controller
     }
 
 
-    public function refreshRedis(){
+/*    public function refreshRedis(){
 
         $ch = curl_init();
         $timeout = 5;
@@ -249,6 +249,39 @@ class PostinfoController extends Controller
         $file_contents = curl_exec($ch);
         curl_close($ch);
         echo $file_contents;
+    }*/
+
+    public function actionExport(){
+        if (Yii::$app->user->isGuest) {
+            // return $this->redirect('login');
+            return $this->actionLogin();
+        }
+
+        $themes = Yii::$app->db->createCommand('SELECT `order_id` as `id`, `pacname` as `packageName` ,`version`,`title`,`zip_source` as `downloadUrl`,`theme_url` as `previewImageUrl`  FROM `postinfo` where `status`=1 AND `order_id`<>65535 ORDER BY `order_id` ASC' )->queryAll();
+        $filename="tmp.txt";
+
+//        var_dump($themes);
+
+        $output = array();
+
+
+        $myfile =  fopen($filename,"w");
+
+        foreach($themes as $theme){
+        //    var_dump($theme['packageName']);
+            fwrite($myfile,$theme['packageName']."\r\n");
+            $output[] = $theme['packageName'];
+        }
+
+        fclose($myfile);
+
+      //  var_dump($output);
+
+
+/*        header("Content-type: application/octet-stream");
+        header("Content-disposition: attachment;filename=$filename");*/
+
+       return $this->render('export',['lists' => $output]);
     }
 
     public function actionOperator()

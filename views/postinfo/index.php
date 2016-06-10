@@ -18,6 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <?= Html::a('Create Postinfo', ['create'], ['class' => 'btn btn-success']) ?>
         <?= Html::a('Create Operator', ['operator'], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Export Operator', ['export'], ['class' => 'btn btn-warning']) ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
